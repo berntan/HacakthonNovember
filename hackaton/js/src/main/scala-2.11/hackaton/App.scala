@@ -30,9 +30,13 @@ object App extends JSApp {
 
   val navBar = {
     tags2.nav(
-      div(cls := "nav-wrapper")(
-        i(cls := "material-icons right")("person")
+      div(cls := "container")(
+        div(cls := "nav-wrapper")(
+          span(cls := "center")("Hackaton"),
+          i(cls := "material-icons right")("person")
+        )
       )
+
     )
   }
 
