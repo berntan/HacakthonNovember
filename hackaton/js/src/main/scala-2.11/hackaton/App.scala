@@ -4,6 +4,7 @@ import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js.JSApp
 import scalatags.JsDom.all._
+import scalatags.JsDom.tags2
 
 import org.scalajs.dom
 
@@ -15,7 +16,15 @@ object App extends JSApp {
   import Client.api
 
   def main() = {
-    dom.document.body.appendChild(fileBrowserExample.render)
+    dom.document.body.appendChild(navBar.render)
+  }
+
+  val navBar = {
+    tags2.nav(
+      div(cls := "nav-wrapper")(
+        i(cls := "material-icons right")("person")
+      )
+    )
   }
 
   val fileBrowserExample = {
