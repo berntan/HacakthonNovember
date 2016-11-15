@@ -3,19 +3,23 @@ package hackaton
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js.JSApp
+import scalatags.JsDom
 import scalatags.JsDom.all._
 import scalatags.JsDom.tags2
-import scalatags.JsDom
+import scalatags.rx.all._
 
 import org.scalajs.dom
+import org.scalajs.dom.raw.Event
 
 import autowire._
 import hackaton.Client.api
+import rx._
 import upickle.Js
 import upickle.default._
 
 
 object App extends JSApp {
+  lazy implicit val ctxOwner: Ctx.Owner = Ctx.Owner.safe()
 
   def main() = {
     val page = div(
@@ -36,19 +40,29 @@ object App extends JSApp {
           i(cls := "material-icons right")("person")
         )
       )
-
     )
   }
 
   lazy val userCreation = {
     val nameBox = input.render
+    val currentName: Var[String] = Var("")
+
+    nameBox.onchange = {(ev: Event) => currentName() = nameBox.value}
+    nameBox.onkeyup = {(ev: Event) => currentName() = nameBox.value}
 
     def createClick() = {
       api.createUser(nameBox.value).call()
       nameBox.value = ""
     }
 
-    card("Opprett bruker", nameBox, List("Opprett bruker" -> createClick))
+    card(
+      title = "Opprett bruker",
+      content = div(
+        nameBox, color := currentName,
+        currentName
+      ),
+      actionButtons = List("Opprett bruker" -> createClick)
+    )
   }
 
   def card(title: String, content: JsDom.Modifier, actionButtons: List[(String, () => Unit)]) =
