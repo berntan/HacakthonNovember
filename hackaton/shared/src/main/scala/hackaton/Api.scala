@@ -2,9 +2,9 @@ package hackaton
 
 
 trait Api {
-  def list(path: String): Seq[String]
+  def list(filter:String): List[User]
 
-  def createUser(username: String): Option[User]
+  def createUser(username: String): User
 }
 
 case class User(username: String)

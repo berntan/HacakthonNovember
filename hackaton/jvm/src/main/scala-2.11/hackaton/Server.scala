@@ -39,16 +39,15 @@ object AutowireServer extends autowire.Server[Js.Value, Reader, Writer] {
 }
 
 object ServerApi extends Api {
-  def list(path: String) = {
-    val chunks = path.split("/", -1)
-    val prefix = "./" + chunks.dropRight(1).mkString("/")
-    val files = Option(new java.io.File(prefix).list()).toSeq.flatten
-    files.filter(_.startsWith(chunks.last))
+  def list(filter: String) = {
+    users.filter(_.username.startsWith(filter))
   }
 
   var users = List.empty[User]
   def createUser(username: String) = {
-    Some(User("Bjarne"))
+    val user = User(username)
+    users = users :+ user
+    user
   }
 }
 

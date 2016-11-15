@@ -5,18 +5,27 @@ import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
 import scala.scalajs.js.JSApp
 import scalatags.JsDom.all._
 import scalatags.JsDom.tags2
+import scalatags.JsDom
 
 import org.scalajs.dom
 
 import autowire._
+import hackaton.Client.api
 import upickle.Js
 import upickle.default._
 
+
 object App extends JSApp {
-  import Client.api
 
   def main() = {
-    dom.document.body.appendChild(navBar.render)
+    val page = div(
+      navBar,
+      div(cls := "container")(
+        userCreation
+      )
+    )
+
+    dom.document.body.appendChild(page.render)
   }
 
   val navBar = {
@@ -27,35 +36,29 @@ object App extends JSApp {
     )
   }
 
-  val fileBrowserExample = {
-    val inputBox = input.render
-    val outputBox = div.render
+  lazy val userCreation = {
+    val nameBox = input.render
 
-    def updateOutput() = {
-      api.list(inputBox.value).call().foreach { paths =>
-        outputBox.innerHTML = ""
-        outputBox.appendChild(
-          ul(
-            for (path <- paths) yield {
-              li(path)
-            }
-          ).render
-        )
-      }
+    def createClick() = {
+      api.createUser(nameBox.value).call()
+      nameBox.value = ""
     }
-    inputBox.onkeyup = { (e: dom.Event) =>
-      updateOutput()
-    }
-    updateOutput()
 
-    div(
-      cls := "container",
-      h1("File Browser"),
-      p("Enter a file path to s"),
-      inputBox,
-      outputBox
-    )
+    card("Opprett bruker", nameBox, List("Opprett bruker" -> createClick))
   }
+
+  def card(title: String, content: JsDom.Modifier, actionButtons: List[(String, () => Unit)]) =
+    div(cls := "card")(
+      div(cls := "card-content")(
+        span(cls := "card-title")(title),
+        content
+      ),
+      div(cls := "card-action")(
+        actionButtons.map { case (text, clickAction) =>
+          button(onclick := clickAction)(text)
+        }
+      )
+    )
 }
 
 object Client extends autowire.Client[Js.Value, Reader, Writer] {
