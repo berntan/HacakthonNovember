@@ -22,7 +22,7 @@ object Template {
           title := "Example Scala.js application",
           meta(httpEquiv := "Content-Type", content := "text/html; charset=UTF-8"),
           script(`type` := "text/javascript", src := "/client-fastopt.js"),
-          script(`type` := "text/javascript" src :="https://code.jquery.com/jquery-2.1.1.min.js"),
+          script(`type` := "text/javascript", src := "https://code.jquery.com/jquery-2.1.1.min.js"),
           link(rel := "stylesheet", href := "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css"),
           script(src := "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js")
         ),
