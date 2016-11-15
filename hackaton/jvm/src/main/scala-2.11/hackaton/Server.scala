@@ -1,13 +1,14 @@
-import upickle.default._
-import upickle.Js
+package hackaton
+
+import scala.concurrent.ExecutionContext.Implicits.global
+
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
-import scala.concurrent.ExecutionContext.Implicits.global
-
-import hackaton.Api
+import upickle.Js
+import upickle.default._
 
 
 object Template {
@@ -39,6 +40,11 @@ object ServerApi extends Api {
     val prefix = "./" + chunks.dropRight(1).mkString("/")
     val files = Option(new java.io.File(prefix).list()).toSeq.flatten
     files.filter(_.startsWith(chunks.last))
+  }
+
+  var users = List.empty[User]
+  def createUser(username: String) = {
+    Some(User("Bjarne"))
   }
 }
 
